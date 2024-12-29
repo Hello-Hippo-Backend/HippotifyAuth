@@ -5,7 +5,7 @@ const getPlaylistByUser = async (req, res) => {
       const role = req.user.role;
       try{
             const [playlistData] = await db.promise()
-                              .query(`SELECT p.id, p.type, p.name, p.description, u.username
+                              .query(`SELECT p.id, p.type, p.name, p.description, p.cover, u.username
                               FROM playlists p
                               JOIN users u ON p.user_id = u.id
                               WHERE p.user_id = ? OR p.type = 'Public'
