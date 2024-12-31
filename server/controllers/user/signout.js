@@ -7,4 +7,4 @@ const signout = async (req, res) => {
     
       return res.json({ msg: "Logged out successfully" });
 };
-module.exports = {signout}
+module.exports = signout;

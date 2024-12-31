@@ -12,15 +12,27 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 
-import ProfilePicture from "../../public/assets/images/UserProfilePicture.png";
-
 import { FaChevronLeft } from "react-icons/fa6";
 import { GrHomeRounded } from "react-icons/gr";
 import { FiSearch } from "react-icons/fi";
 import { axiosInstance } from "../utils/axiosInstance";
+import { useEffect, useState } from "react";
 
 export default function Navigation() {
   const navigate = useNavigate();
+  const [user, setUser] = useState();
+
+  const setUserData = async () => {
+    try {
+      const response = await axiosInstance.get("/user");
+      setUser(response.data.data);
+    } catch (error) {
+      return error.response.data;
+    }
+  };
+  useEffect(() => {
+    setUserData();
+  }, []);
 
   const handleSignout = async () => {
     try {
@@ -66,7 +78,7 @@ export default function Navigation() {
       <DialogRoot placement={"center"} size={"xs"}>
         <DialogTrigger asChild>
           <Button variant="plain">
-            <Image src={ProfilePicture} width={"40px"} cursor={"pointer"} />
+            <Image src={user?.image_url} width={"40px"} cursor={"pointer"} />
           </Button>
         </DialogTrigger>
         <DialogContent padding={"20px"}>
