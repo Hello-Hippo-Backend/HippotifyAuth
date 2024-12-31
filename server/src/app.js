@@ -1,12 +1,13 @@
 const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const app = express();
 const port = 3000;
+
 const connection = require('./config/database');
-const playlistRoute = require('./routes/playlistRoute');
-const verifyAccessToken = require('./middlewares/jwtHandler');
-const userRoute = require('./routes/userRoute');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
+const playlistRoute = require('./routes/playlistRoutes');
+const userRoute = require('./routes/userRoutes');
+const verifyAccessToken = require('./middlewares/authenticateToken');
 
 app.use(cookieParser());
 app.use(express.json());

@@ -1,4 +1,4 @@
-const db = require('../../config/database');
+const db = require('../config/database');
 
 const getUserById = async (req, res) => {
       const user_id = req.user.id;

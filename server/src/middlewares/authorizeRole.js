@@ -1,4 +1,4 @@
-const verifyRole = (allowedRoles) => (req, res, next) => {
+const authorizeRole = (allowedRoles) => (req, res, next) => {
       try {
           // Ensure `req.user` is populated by authentication middleware
           if (!req.user || !req.user.role) {
@@ -18,3 +18,4 @@ const verifyRole = (allowedRoles) => (req, res, next) => {
       }
   };
   
+  module.exports = authorizeRole;
