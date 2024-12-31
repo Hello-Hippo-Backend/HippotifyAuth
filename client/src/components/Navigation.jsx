@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { Flex, Box, Image } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 import { Button } from "./ui/button";
 import {
   DialogActionTrigger,
-  DialogBody,
   DialogCloseTrigger,
   DialogContent,
   DialogFooter,

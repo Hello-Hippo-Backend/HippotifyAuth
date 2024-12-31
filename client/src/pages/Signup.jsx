@@ -4,6 +4,7 @@ import IMG from "../../public/assets/images/UserProfilePicture.png";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "../components/ui/button";
+import { axiosInstance } from "../utils/axiosInstance";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -13,12 +14,22 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!emailRegex.test(email)) {
       alert("Invalid email");
     } else if (password !== confirmPassword) {
       alert("Password and confirm password do not match");
     } else {
+      try {
+        await axiosInstance.post("/user/signup", {
+          username: username,
+          email: email,
+          password: password,
+        });
+        navigate("/signin");
+      } catch (error) {
+        return error.response.data;
+      }
       console.log("Sign up", username, email, password);
     }
   };
@@ -113,6 +124,7 @@ export default function Signup() {
             width="100%"
             bgColor="#EC00F0"
             color="white"
+            onClick={()=> handleSignup()}
           >
             SIGN UP
           </Button>

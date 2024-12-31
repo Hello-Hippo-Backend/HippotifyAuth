@@ -1,10 +1,4 @@
-import {
-  Text,
-  Heading,
-  Box,
-  Flex,
-  Image,
-} from "@chakra-ui/react";
+import { Text, Heading, Box, Flex, Image } from "@chakra-ui/react";
 import { FaRegClock, FaPlay } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
 import ProfilePicture from "../../public/assets/images/UserProfilePicture.png";
@@ -19,22 +13,29 @@ export default function Playlist() {
   const [playlist, setPlaylist] = useState([]);
   const navigate = useNavigate();
 
-  const setPlaylistData = async() => {
+  const setPlaylistData = async () => {
     try {
-      const response = await axiosInstance.get(`/playlist/${id||1}`);
+      const response = await axiosInstance.get(`/playlist/${id || 1}`);
       setPlaylist(response.data.data);
     } catch (error) {
       if (error.response?.status === 403) {
         alert("You are not authorized to access this playlist.");
-        navigate("/"); 
-    }
+        navigate("/");
+      }
       return error.response.data;
     }
-  }
+  };
+  const handleTrackRemoval = (id) => {
+    setPlaylist((prevState) => ({
+      ...prevState,
+      tracks: prevState.tracks.filter((track) => track.id !== id),
+    }));
+  };
+
   useEffect(() => {
     setPlaylistData();
   }, [id]);
- 
+
   return (
     <>
       <Box
@@ -63,7 +64,7 @@ export default function Playlist() {
               fontWeight={"bold"}
               paddingBottom={"20px"}
             >
-              {playlist.name}
+              {playlist.title}
             </Heading>
             <Text color={"gray.300"}>{playlist.description}</Text>
             <Flex
@@ -73,7 +74,7 @@ export default function Playlist() {
               pt={"10px"}
               gap={"5px"}
             >
-              <Image src={ProfilePicture} height={"22px"} />
+              <Image src={playlist.image_url} height={"22px"} />
               <Text>
                 {playlist.author} - {playlist.tracks?.length} songs
               </Text>
@@ -106,8 +107,15 @@ export default function Playlist() {
           </Flex>
           <Box height={"1.5px"} bgColor={"gray.600"}></Box>
           <Box pt={"16px"}>
-            {playlist.tracks?.map((item, index) => (
-              <TrackCard key={item.id} track={item} index={index} />
+            {playlist.tracks?.map((track, index) => (
+              <TrackCard
+                key={track.id}
+                id={track.id}
+                isPrivate={playlist.type === "Private" ? true : false}
+                track={track}
+                index={index}
+                onRemove={handleTrackRemoval}
+              />
             ))}
           </Box>
         </Box>
