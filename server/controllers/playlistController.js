@@ -2,7 +2,6 @@ const db = require("../config/database");
 
 const getAllPlaylistByUser = async (req, res) => {
   const user_id = req.user.id;
-  const role = req.user.role;
   try {
     const [playlists] = await db.promise().query(
       `SELECT p.id, p.title, p.cover
@@ -32,7 +31,7 @@ const getPlaylistByUserId = async (req, res) => {
     const [playlist] = await db.promise().query(
       `SELECT id, title 
       FROM playlists
-      WHERE user_id = ? AND type = 'Private'`,
+      WHERE user_id = ?`,
       [user_id]
     );
 
@@ -54,7 +53,6 @@ const getPlaylistByUserId = async (req, res) => {
 const getPlaylistById = async (req, res) => {
   const { id } = req.params;
   const user_id = req.user.id;
-  const role = req.user.role;
   try {
     if (!id) {
       return res.status(400).json({
@@ -66,7 +64,7 @@ const getPlaylistById = async (req, res) => {
 
     const [playlist] = await db.promise().query(
       `SELECT p.id, p.title, p.description, p.cover,
-                      u.image_url, u.username AS author, p.type
+                      u.id as author_id, u.image_url, u.username AS author, p.type
                   FROM playlists p
                   JOIN users u ON p.user_id = u.id
                   WHERE p.id = ? AND (p.user_id = ? OR p.type = 'Public')`,
@@ -101,13 +99,15 @@ const getPlaylistById = async (req, res) => {
         track.duration_seconds
       ).padStart(2, "0")}`,
     }));
-
+    
+    const edit_access = playlist[0].author_id === user_id;
     const response = {
       id: playlist[0].id,
       title: playlist[0].title,
       description: playlist[0].description,
       cover: playlist[0].cover,
       author: playlist[0].author,
+      edit_access,
       image_url: playlist[0].image_url,
       type: playlist[0].type,
       tracks: formattedTracks,
@@ -130,7 +130,7 @@ const getPlaylistById = async (req, res) => {
 
 const updatePlayList = async (req, res) => {
   const { id } = req.params;
-  const { name, description } = req.body;
+  const { title, description } = req.body;
   try {
     const [playlists] = await db
       .promise()
@@ -145,9 +145,9 @@ const updatePlayList = async (req, res) => {
 
     await db.promise().query(
       `UPDATE playlists 
-                        SET name = ?, description = ?
+                        SET title = ?, description = ?
                         WHERE id = ?`,
-      [name, description, id]
+      [title, description, id]
     );
 
     const [updatedPlaylist] = await db

@@ -1,7 +1,24 @@
-import { Text, Heading, Box, Flex, Image } from "@chakra-ui/react";
+import {
+  Text,
+  Heading,
+  Box,
+  Flex,
+  Image,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 import { FaRegClock, FaPlay } from "react-icons/fa6";
 import { useNavigate, useParams } from "react-router-dom";
-import ProfilePicture from "../../public/assets/images/UserProfilePicture.png";
+import {
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
 
 import { Button } from "../components/ui/button";
 import TrackCard from "../components/TrackCard";
@@ -11,6 +28,8 @@ import { axiosInstance } from "../utils/axiosInstance";
 export default function Playlist() {
   const id = useParams().id;
   const [playlist, setPlaylist] = useState([]);
+  const [newPlaylistTitle, setNewPlatlistTitle] = useState("");
+  const [newDescription, setNewDescription] = useState("");
   const navigate = useNavigate();
 
   const setPlaylistData = async () => {
@@ -25,6 +44,7 @@ export default function Playlist() {
       return error.response.data;
     }
   };
+
   const handleTrackRemoval = (id) => {
     setPlaylist((prevState) => ({
       ...prevState,
@@ -32,6 +52,25 @@ export default function Playlist() {
     }));
   };
 
+  const updatePlaylistDetail = async () => {
+    try {
+      await axiosInstance.put(`/playlist/${playlist?.id}`,{
+        title: newPlaylistTitle || playlist.title, 
+        description: newDescription || playlist.description
+      });
+
+      setPlaylist((prevState) => ({
+        ...prevState,
+        title: updatedTitle,
+        description: updatedDescription,
+      }));
+
+      alert(`Playlist updated successfully`)
+      console.log("Update playlist detail", newPlaylistTitle, newDescription);
+    } catch (error) {
+      return error.response.data;
+    }
+  };
   useEffect(() => {
     setPlaylistData();
   }, [id]);
@@ -57,6 +96,34 @@ export default function Playlist() {
             boxShadow="0 4px 6px rgba(0, 0, 0, 0.3)"
             borderRadius={"8px"}
           ></Image>
+          {!(playlist?.edit_access) && (
+            <Box>
+              <Text paddingBottom={"15px"}>{playlist.type}</Text>
+              <Heading
+                fontSize={"60px"}
+                fontWeight={"bold"}
+                paddingBottom={"20px"}
+              >
+                {playlist.title}
+              </Heading>
+              <Text color={"gray.300"}>{playlist.description}</Text>
+              <Flex
+                color={"gray.400"}
+                fontSize={"14px"}
+                fontWeight={"600"}
+                pt={"10px"}
+                gap={"5px"}
+              >
+                <Image src={playlist.image_url} height={"22px"} />
+                <Text>
+                  {playlist.author} - {playlist.tracks?.length} songs
+                </Text>
+              </Flex>
+            </Box>
+          )}
+          {playlist?.edit_access && (
+            <DialogRoot placement={"center"}>
+              <DialogTrigger asChild>
           <Box>
             <Text paddingBottom={"15px"}>{playlist.type} Playlist</Text>
             <Heading
@@ -80,6 +147,57 @@ export default function Playlist() {
               </Text>
             </Flex>
           </Box>
+          </DialogTrigger>
+              <DialogContent padding={"20px"} backgroundColor={"gray.800"}>
+                <DialogHeader>
+                  <DialogTitle>Edit details</DialogTitle>
+                </DialogHeader>
+                <DialogBody>
+                  <Flex gap={"20px"} pt={"20px"}>
+                    <Image
+                      src={playlist.cover}
+                      width={"200px"}
+                      boxShadow="0 4px 6px rgba(0, 0, 0, 0.3)"
+                      borderRadius={"8px"}
+                    ></Image>
+                    <Box>
+                      <Input
+                        placeholder={playlist.title}
+                        bgColor={"gray.700"}
+                        padding={"10px"}
+                        onChange={(e) => setNewPlatlistTitle(e.target.value)}
+                      />
+                      <Textarea
+                        mt={"20px"}
+                        placeholder={playlist.description}
+                        bgColor={"gray.700"}
+                        padding={"10px"}
+                        height={"70%"}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                      />
+                    </Box>
+                  </Flex>
+                </DialogBody>
+                <DialogFooter>
+                  <Button
+                    mt={"20px"}
+                    width="100px"
+                    padding={"20px"}
+                    borderRadius={"20px"}
+                    onClick={() => updatePlaylistDetail()}
+                  >
+                    Save
+                  </Button>
+                </DialogFooter>
+                <Text fontSize={"12px"} color={"gray.200"} pt={"10px"}>
+                  By proceeding, you agree to give Hipponify access to the image
+                  you choose you upload. Please make sure you have the right to
+                  upload the image.
+                </Text>
+                <DialogCloseTrigger />
+              </DialogContent>
+            </DialogRoot>
+          )}
         </Flex>
         <Box paddingTop={"20px"}>
           <Button
