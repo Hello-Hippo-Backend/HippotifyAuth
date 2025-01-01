@@ -7,10 +7,13 @@ import {
   updatePlayList,
   addTracksToPlayList,
   removeTrackFromPlaylist,
+  getAllPlaylists,
 } from "../controllers/playlistController.js";
+import authorizeRole from "../middlewares/authorizeRole.js";
 
 const playlistRoute = express.Router();
 
+playlistRoute.get("/all", authorizeRole('Admin'), getAllPlaylists);
 playlistRoute.get("/", getAllPlaylistByUser);
 playlistRoute.post("/", createNewPlaylist);
 playlistRoute.get("/owned", getPlaylistByUserId);

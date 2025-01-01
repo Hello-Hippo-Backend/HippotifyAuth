@@ -1,11 +1,11 @@
 export default (allowedRoles) => (req, res, next) => {
     try {
       if (!req.user || !req.user.role) {
-        return res.status(403).json({ success: false, message: "Forbidden. User role not found." });
+        return res.status(403).json({ success: false, message: "User role not found." });
       }
   
       if (!allowedRoles.includes(req.user.role)) {
-        return res.status(403).json({ success: false, message: "Forbidden. Insufficient privileges." });
+        return res.status(403).json({ success: false, message: "Insufficient privileges." });
       }
   
       next();

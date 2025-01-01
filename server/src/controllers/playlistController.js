@@ -1,6 +1,25 @@
 import * as playlistModel from "../models/playlistModel.js";
 import { timeFormatHMS, timeFormat } from "../utils/timeFormatChange.js";
 
+export const getAllPlaylists = async (req, res) => {
+  try {
+    const playlists = await playlistModel.getAllPlaylists();
+
+    return res.json({
+      success: true,
+      data: playlists,
+      message: "Playlist retrieved successfully",
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
+      success: false,
+      data: null,
+      message: "Internal server error",
+    });
+  }
+};
+
 export const getAllPlaylistByUser = async (req, res) => {
   const userId = req.user.id;
   try {

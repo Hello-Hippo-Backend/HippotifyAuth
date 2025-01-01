@@ -1,5 +1,14 @@
 import db from "../config/database.js";
 
+export const getAllPlaylists = async () => {
+  const [playlists] = await db.promise().query(
+    `SELECT p.id, p.cover, p.title, p.description, p.type, u.username as author
+     FROM playlists p
+     JOIN users u ON p.user_id = u.id`,
+  );
+  return playlists;
+};
+
 export const getAllPlaylistsByUser = async (userId) => {
   const [playlists] = await db.promise().query(
     `SELECT p.id, p.title, p.cover
