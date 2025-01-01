@@ -59,7 +59,7 @@ export default function Navigation() {
           variant="subtle"
           borderRadius="100%"
           padding="10px"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/playlist")}
         >
           <GrHomeRounded color="gray" />
         </Button>
@@ -74,6 +74,18 @@ export default function Navigation() {
           <FiSearch />
           What do you want to play?
         </Button>
+        <Button
+          justifyContent="center"
+          alignItems="center"
+          position="absolute"
+          left="70%"
+          variant="ghost"
+          borderRadius="15px"
+          padding="10px"
+          onClick={() => navigate("/playlist/admin")}
+        >
+          Admin
+        </Button>
       </Flex>
       <DialogRoot placement={"center"} size={"xs"}>
         <DialogTrigger asChild>
@@ -87,9 +99,19 @@ export default function Navigation() {
           </DialogHeader>
           <DialogFooter display={"flex"} justifyContent={"center"}>
             <DialogActionTrigger asChild>
-              <Button variant="outline" padding="10px">Cancel</Button>
+              <Button variant="outline" padding="10px">
+                Cancel
+              </Button>
             </DialogActionTrigger>
-            <Button bgColor="#af1fb1" color="white" varient="solid" padding="10px" onClick={() => handleSignout()}>Confirm</Button>
+            <Button
+              bgColor="#af1fb1"
+              color="white"
+              varient="solid"
+              padding="10px"
+              onClick={() => handleSignout()}
+            >
+              Confirm
+            </Button>
           </DialogFooter>
           <DialogCloseTrigger />
         </DialogContent>

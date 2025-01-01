@@ -40,7 +40,7 @@ export default function Playlist() {
     } catch (error) {
       if (error.response?.status === 403) {
         alert("You are not authorized to access this playlist.");
-        navigate("/");
+        navigate("/playlist");
       }
       return error.response.data;
     }

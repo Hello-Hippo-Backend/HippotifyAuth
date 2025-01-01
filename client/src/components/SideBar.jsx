@@ -43,7 +43,7 @@ export default function SideBar() {
                 display="block"
                 color="gray"
                 padding={"0px 0px 55px 0px"}
-                onClick={() => navigate(`/${item.id}`)}
+                onClick={() => navigate(`/playlist/${item.id}`)}
               >
                 <Image src={item.cover} borderRadius={"8px"}></Image>
               </Button>

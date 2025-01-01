@@ -18,7 +18,7 @@ export default function Signin() {
           password: password,
         });
         alert(response.data.message);
-        navigate("/");
+        navigate("/playlist");
       } catch (error) {
         alert(error.response.data.message);
         return error.response.data;

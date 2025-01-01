@@ -1,20 +1,20 @@
 import express from "express";
 import {
-  getAllPlaylistByUser,
   createNewPlaylist,
   getPlaylistByUserId,
-  getPlaylistById,
   updatePlayList,
   addTracksToPlayList,
   removeTrackFromPlaylist,
   getAllPlaylists,
+  getAllUserPlaylist,
+  getPlaylistById,
 } from "../controllers/playlistController.js";
 import authorizeRole from "../middlewares/authorizeRole.js";
 
 const playlistRoute = express.Router();
 
-playlistRoute.get("/all", authorizeRole('Admin'), getAllPlaylists);
-playlistRoute.get("/", getAllPlaylistByUser);
+playlistRoute.get("/admin/all", authorizeRole('Admin'), getAllPlaylists);
+playlistRoute.get("/", getAllUserPlaylist);
 playlistRoute.post("/", createNewPlaylist);
 playlistRoute.get("/owned", getPlaylistByUserId);
 playlistRoute.get("/:playlistId", getPlaylistById);

@@ -20,10 +20,10 @@ export const getAllPlaylists = async (req, res) => {
   }
 };
 
-export const getAllPlaylistByUser = async (req, res) => {
+export const getAllUserPlaylist = async (req, res) => {
   const userId = req.user.id;
   try {
-    const playlists = await playlistModel.getAllPlaylistsByUser(userId);
+    const playlists = await playlistModel.getAllUserPlaylists(userId);
 
     return res.json({
       success: true,
@@ -63,6 +63,7 @@ export const getPlaylistByUserId = async (req, res) => {
 export const getPlaylistById = async (req, res) => {
   const { playlistId } = req.params;
   const userId = req.user.id;
+  const role = req.user.role;
   if (!playlistId) {
     return res.status(400).json({
       success: false,
@@ -72,7 +73,9 @@ export const getPlaylistById = async (req, res) => {
   }
 
   try {
-    const playlist = await playlistModel.getPlaylistById(playlistId, userId);
+    const playlist = await (role == "Admin"
+      ? playlistModel.getAdminPlaylistById(playlistId)
+      : playlistModel.getUserPlaylistById(playlistId, userId));
     if (!playlist) {
       return res.status(403).json({
         success: false,

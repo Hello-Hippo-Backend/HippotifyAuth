@@ -9,7 +9,7 @@ export const getAllPlaylists = async () => {
   return playlists;
 };
 
-export const getAllPlaylistsByUser = async (userId) => {
+export const getAllUserPlaylists = async (userId) => {
   const [playlists] = await db.promise().query(
     `SELECT p.id, p.title, p.cover
      FROM playlists p
@@ -20,17 +20,19 @@ export const getAllPlaylistsByUser = async (userId) => {
   return playlists;
 };
 
-export const getPlaylistByUserId = async (userId) => {
+export const getAdminPlaylistById = async (playlistId) => {
   const [playlist] = await db.promise().query(
-    `SELECT id, title 
-     FROM playlists
-     WHERE user_id = ?`,
-    [userId]
+    `SELECT p.id, p.title, p.description, p.cover,
+            u.id as author_id, u.image_url, u.username AS author, p.type
+     FROM playlists p
+     JOIN users u ON p.user_id = u.id
+     WHERE p.id = ?`,
+    [playlistId]
   );
-  return playlist;
+  return playlist[0];
 };
 
-export const getPlaylistById = async (playlistId, userId) => {
+export const getUserPlaylistById = async (playlistId, userId) => {
   const [playlist] = await db.promise().query(
     `SELECT p.id, p.title, p.description, p.cover,
             u.id as author_id, u.image_url, u.username AS author, p.type
@@ -40,6 +42,16 @@ export const getPlaylistById = async (playlistId, userId) => {
     [playlistId, userId]
   );
   return playlist[0];
+};
+
+export const getPlaylistByUserId = async (userId) => {
+  const [playlist] = await db.promise().query(
+    `SELECT id, title 
+     FROM playlists
+     WHERE user_id = ?`,
+    [userId]
+  );
+  return playlist;
 };
 
 export const getPlaylistTracks = async (playlistId) => {
