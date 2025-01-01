@@ -74,7 +74,7 @@ export default function Navigation() {
           <FiSearch />
           What do you want to play?
         </Button>
-        <Button
+        {user?.role==="Admin" && <Button
           position={"absolute"}
           left={"70%"}
           variant={"ghost"}
@@ -83,7 +83,7 @@ export default function Navigation() {
           onClick={() => navigate("/playlist/admin")}
         >
           Admin
-        </Button>
+        </Button>}
       </Flex>
       <DialogRoot placement={"center"} size={"xs"}>
         <DialogTrigger asChild>

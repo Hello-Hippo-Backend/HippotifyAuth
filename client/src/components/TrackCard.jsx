@@ -78,6 +78,10 @@ export default function TrackCard({ id, isOwned, track, index, onRemove, onTrack
               variant="plain"
               color="gray"
               _hover={{ color: "white" }}
+              onClick={(e) => {
+                e.stopPropagation(); 
+                setOpen(!open); 
+              }}
             >
               <FaEllipsisVertical />
             </Button>
