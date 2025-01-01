@@ -8,7 +8,7 @@ export default function SideBar() {
   const navigate = useNavigate();
   const [playlist, setPlaylist] = useState([]);
 
-  async function setPlaylistData() {
+  async function fetchPlaylistData() {
     try {
       const response = await axiosInstance.get("/playlists");
       setPlaylist(response.data.data);
@@ -17,7 +17,7 @@ export default function SideBar() {
     }
   }
   useEffect(() => {
-    setPlaylistData();
+    fetchPlaylistData();
   }, []);
 
   return (

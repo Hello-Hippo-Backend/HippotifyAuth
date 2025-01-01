@@ -22,7 +22,7 @@ export default function Navigation() {
   const navigate = useNavigate();
   const [user, setUser] = useState();
 
-  const setUserData = async () => {
+  const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get("/users");
       setUser(response.data.data);
@@ -31,7 +31,7 @@ export default function Navigation() {
     }
   };
   useEffect(() => {
-    setUserData();
+    fetchUserData();
   }, []);
 
   const handleSignout = async () => {

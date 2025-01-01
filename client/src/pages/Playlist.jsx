@@ -32,7 +32,7 @@ export default function Playlist() {
   const [newDescription, setNewDescription] = useState("");
   const navigate = useNavigate();
 
-  const setPlaylistData = async () => {
+  const fetchPlaylistData = async () => {
     try {
       const response = await axiosInstance.get(`/playlists/${id || 1}`);
       setPlaylist(response.data.data);
@@ -44,6 +44,9 @@ export default function Playlist() {
       return error.response.data;
     }
   };
+  useEffect(() => {
+    fetchPlaylistData();
+  }, [id]);
 
   const updatePlaylistDetail = async () => {
     try {
@@ -52,27 +55,16 @@ export default function Playlist() {
         description: newDescription || playlist.description,
       });
 
-      setPlaylist((prevState) => ({
-        ...prevState,
-        title: newTitle || playlist.title,
-        description: newDescription || playlist.description,
-      }));
-
+      fetchPlaylistData();
       alert(`Playlist updated successfully`);
       console.log("Update playlist detail", newTitle, newDescription);
     } catch (error) {
       return error.response.data;
     }
   };
-  useEffect(() => {
-    setPlaylistData();
-  }, [id]);
 
-  const handleTrackRemoval = (id) => {
-    setPlaylist((prevState) => ({
-      ...prevState,
-      tracks: prevState.tracks.filter((track) => track.id !== id),
-    }));
+  const handleTrackRemoval = () => {
+    fetchPlaylistData();
   };
 
   return (

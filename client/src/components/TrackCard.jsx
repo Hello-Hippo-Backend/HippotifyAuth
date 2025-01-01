@@ -15,7 +15,7 @@ export default function TrackCard({ id, isOwned, track, index, onRemove }) {
   const [open, setOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
 
-  async function setPlaylistData() {
+  async function fetchOwnedPlaylistData() {
     try {
       const response = await axiosInstance.get("/playlists/owned");
       setPlaylists(response.data.data);
@@ -25,7 +25,7 @@ export default function TrackCard({ id, isOwned, track, index, onRemove }) {
     }
   }
   useEffect(() => {
-    setPlaylistData();
+    fetchOwnedPlaylistData();
   }, []);
 
   const addSongToMyPlaylist = async (playlistId) => {
@@ -41,7 +41,7 @@ export default function TrackCard({ id, isOwned, track, index, onRemove }) {
   const removeSongFromPlaylist = async () => {
     try {
       await axiosInstance.delete(`/playlists/${id}/track/${track.id}`);
-      onRemove(track.id);
+      onRemove();
       console.log("Remove from my playlist", track.id);
     } catch (error) {
       return error.response.data;
