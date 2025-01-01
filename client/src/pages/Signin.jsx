@@ -11,19 +11,19 @@ export default function Signin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-    const handleSignin = async () => {
-      try {
-        const response = await axiosInstance.post("/auth/signin", {
-          username: username,
-          password: password,
-        });
-        alert(response.data.message);
-        navigate("/playlist");
-      } catch (error) {
-        alert(error.response.data.message);
-        return error.response.data;
-      }
+  const handleSignin = async () => {
+    try {
+      const response = await axiosInstance.post("/auth/signin", {
+        username: username,
+        password: password,
+      });
+      alert(response.data.message);
+      navigate("/playlist");
+    } catch (error) {
+      alert(error.response.data.message);
+      return error.response.data;
     }
+  };
 
   return (
     <Flex

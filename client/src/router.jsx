@@ -2,14 +2,14 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import Playlist from "./pages/Playlist";
-import Signin from "./pages/Signin"
-import Signup from "./pages/Signup"
-import Admin from "./pages/Admin"
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import Admin from "./pages/Admin";
 
 const router = createBrowserRouter([
   {
     path: "*",
-    element:<Navigate to="/playlist" replace />,
+    element: <Navigate to="/playlist" replace />,
   },
   {
     path: "/playlist",
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       {
         path: "/playlist/admin",
         element: <Admin />,
-      }
+      },
     ],
   },
   {
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
-  }
+  },
 ]);
 
 export default router;

@@ -20,7 +20,9 @@ export default function PlayListCard({ id, cover, title, author }) {
           <Card.Title paddingTop={"10px"} fontSize={"16px"}>
             {title}
           </Card.Title>
-          <Text color={"gray"} fontSize={"13px"}>Author: {author}</Text>
+          <Text color={"gray"} fontSize={"13px"}>
+            Author: {author}
+          </Text>
         </Card.Body>
       </Card.Root>
     </Box>

@@ -91,5 +91,5 @@ export const playListMockUp = [
         duration: "4:01",
       },
     ],
-  }
+  },
 ];

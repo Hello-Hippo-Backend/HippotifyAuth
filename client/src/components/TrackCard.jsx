@@ -11,7 +11,14 @@ import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
 import { SlTrash } from "react-icons/sl";
 import { axiosInstance } from "../utils/axiosInstance";
 
-export default function TrackCard({ id, isOwned, track, index, onRemove, onTrackClick}) {
+export default function TrackCard({
+  id,
+  isOwned,
+  track,
+  index,
+  onRemove,
+  onTrackClick,
+}) {
   const [open, setOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
 
@@ -30,7 +37,9 @@ export default function TrackCard({ id, isOwned, track, index, onRemove, onTrack
 
   const addSongToMyPlaylist = async (playlistId) => {
     try {
-      await axiosInstance.post(`/playlists/${playlistId}/track/${track.track_id}`);
+      await axiosInstance.post(
+        `/playlists/${playlistId}/track/${track.track_id}`
+      );
       alert(`Successfully Add "${track.title}" to playlist`);
       console.log("Add to my playlist", track.id);
     } catch (error) {
@@ -79,8 +88,8 @@ export default function TrackCard({ id, isOwned, track, index, onRemove, onTrack
               color="gray"
               _hover={{ color: "white" }}
               onClick={(e) => {
-                e.stopPropagation(); 
-                setOpen(!open); 
+                e.stopPropagation();
+                setOpen(!open);
               }}
             >
               <FaEllipsisVertical />

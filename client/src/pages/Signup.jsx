@@ -125,7 +125,7 @@ export default function Signup() {
             width="100%"
             bgColor="#EC00F0"
             color="white"
-            onClick={()=> handleSignup()}
+            onClick={() => handleSignup()}
           >
             SIGN UP
           </Button>

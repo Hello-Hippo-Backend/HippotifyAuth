@@ -4,7 +4,7 @@ export const getAllPlaylists = async () => {
   const [playlists] = await db.promise().query(
     `SELECT p.id, p.cover, p.title, p.description, p.type, u.username as author
      FROM playlists p
-     JOIN users u ON p.user_id = u.id`,
+     JOIN users u ON p.user_id = u.id`
   );
   return playlists;
 };

@@ -9,7 +9,7 @@ const authMiddleware = (Component) => {
 
     const verifyAuth = async () => {
       try {
-        const response = await axiosInstance.get('/auth');
+        const response = await axiosInstance.get("/auth");
         setAuthenticated(response.data);
       } catch (error) {
         setAuthenticated(false);
@@ -25,7 +25,7 @@ const authMiddleware = (Component) => {
     if (loading) {
       return null;
     }
-    
+
     if (!authenticated) {
       return <Navigate to="/signin" replace />;
     }

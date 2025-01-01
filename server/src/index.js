@@ -9,8 +9,6 @@ import userRoute from "./routes/userRoutes.js";
 import playlistRoute from "./routes/playlistRoutes.js";
 import authenticateToken from "./middlewares/authenticateToken.js";
 
-
-
 const app = express();
 const port = 3000;
 

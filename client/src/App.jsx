@@ -48,7 +48,7 @@ function App() {
         bottom="0"
         height="70px"
       >
-        <MusicPlayer currentTrack = {currentTrack}/>
+        <MusicPlayer currentTrack={currentTrack} />
       </Box>
     </>
   );
