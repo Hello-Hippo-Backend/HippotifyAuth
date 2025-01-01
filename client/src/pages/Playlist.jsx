@@ -8,7 +8,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { FaRegClock, FaPlay } from "react-icons/fa6";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -31,6 +31,7 @@ export default function Playlist() {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const navigate = useNavigate();
+  const { handleTrackChange } = useOutletContext(); //called parent function (App.jsx)
 
   const fetchPlaylistData = async () => {
     try {
@@ -227,6 +228,7 @@ export default function Playlist() {
                 track={track}
                 index={index}
                 onRemove={handleTrackRemoval}
+                onTrackClick={handleTrackChange}
               />
             ))}
           </Box>

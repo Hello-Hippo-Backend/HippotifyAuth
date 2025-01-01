@@ -6,8 +6,14 @@ import SideBar from "./components/SideBar";
 import MusicPlayer from "./components/MusicPlayer";
 
 import authMiddleware from "./middleware/authMiddleware";
+import { useState } from "react";
 
 function App() {
+  const [currentTrack, setCurrentTrack] = useState(null);
+
+  const handleTrackChange = (track) => {
+    setCurrentTrack(track);
+  };
   return (
     <>
       <Box as="nav" position="fixed" top="0" left="0" right="0" zIndex="1000">
@@ -31,7 +37,7 @@ function App() {
           height="calc(100vh - 140px)"
           overflowY="auto"
         >
-          <Outlet />
+          <Outlet context={{ handleTrackChange }} />
         </Box>
       </Flex>
       <Box
@@ -42,7 +48,7 @@ function App() {
         bottom="0"
         height="70px"
       >
-        <MusicPlayer />
+        <MusicPlayer currentTrack = {currentTrack}/>
       </Box>
     </>
   );

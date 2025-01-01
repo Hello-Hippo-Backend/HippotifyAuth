@@ -6,7 +6,7 @@ import { HiOutlineSpeakerWave } from "react-icons/hi2";
 import { IoIosSkipBackward, IoIosSkipForward } from "react-icons/io";
 import { Button } from "./ui/button";
 
-export default function MusicPlayer() {
+export default function MusicPlayer({currentTrack}) {
   return (
     <Flex
       padding={"3px 10px"}
@@ -14,9 +14,9 @@ export default function MusicPlayer() {
       alignItems={"center"}
     >
       <Flex gap={"10px"} justifyContent={"end"} alignItems={"end"}>
-        <Image src={MusicCover} height={"55px"} borderRadius={"5px"}></Image>
+        <Image src={currentTrack?.cover || MusicCover} height={"55px"} borderRadius={"5px"}></Image>
         <Box>
-          <Text>Hippo sound</Text>
+          <Text>{currentTrack?.title || "Choose a Song"}</Text>
           <Text
             fontSize={"14px"}
             color={"gray.300"}
@@ -24,7 +24,7 @@ export default function MusicPlayer() {
             alignItems={"center"}
             gap={"5px"}
           >
-            <GoVideo /> Hippo video - Moo Deng
+            <GoVideo /> {currentTrack?.artist || "-"}
           </Text>
         </Box>
       </Flex>
@@ -38,14 +38,14 @@ export default function MusicPlayer() {
             <IoIosSkipBackward size={"20px"}/><Button borderRadius={"20px"}><FaPlay/></Button><IoIosSkipForward size={"20px"}/>
         </Flex>
         <Flex gap={"10px"} justify={"center"} alignItems={"center"} fontSize={"13px"} color={"gray.300"}>
-          <Text>55:55</Text>
+          <Text>0:00</Text>
           <Box
             height={"5px"}
             width={"450px"}
-            background={"linear-gradient(90deg, rgba(255,255,255,1) 44%, rgba(84,84,84,1) 44%)"}
+            background={"linear-gradient(90deg, rgba(255,255,255,1) 1%, rgba(84,84,84,1) 1%)"}
             borderRadius={"20px"}
           ></Box>
-          <Text>1:59:59</Text>
+          <Text>{currentTrack?.duration || "0:00"}</Text>
         </Flex>
       </Flex>
       <Flex

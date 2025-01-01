@@ -11,7 +11,7 @@ import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
 import { SlTrash } from "react-icons/sl";
 import { axiosInstance } from "../utils/axiosInstance";
 
-export default function TrackCard({ id, isOwned, track, index, onRemove }) {
+export default function TrackCard({ id, isOwned, track, index, onRemove, onTrackClick}) {
   const [open, setOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
 
@@ -56,6 +56,8 @@ export default function TrackCard({ id, isOwned, track, index, onRemove }) {
         fontSize={"15px"}
         color={"gray.400"}
         _hover={{ bg: "rgba(255, 255, 255, 0.1)", borderRadius: "10px" }}
+        cursor="pointer"
+        onClick={() => onTrackClick(track)} // Trigger the parent's handler
       >
         <Text width={"2%"}>{index + 1}</Text>
         <Flex width={"53%"}>
