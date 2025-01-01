@@ -75,13 +75,11 @@ export default function Navigation() {
           What do you want to play?
         </Button>
         <Button
-          justifyContent="center"
-          alignItems="center"
-          position="absolute"
-          left="70%"
-          variant="ghost"
-          borderRadius="15px"
-          padding="10px"
+          position={"absolute"}
+          left={"70%"}
+          variant={"ghost"}
+          borderRadius={"15px"}
+          padding={"10px"}
           onClick={() => navigate("/playlist/admin")}
         >
           Admin

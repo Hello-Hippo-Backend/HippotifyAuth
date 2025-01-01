@@ -14,8 +14,8 @@ export default function MusicPlayer({currentTrack}) {
       alignItems={"center"}
     >
       <Flex gap={"10px"} justifyContent={"end"} alignItems={"end"}>
-        <Image src={currentTrack?.cover || MusicCover} height={"55px"} borderRadius={"5px"}></Image>
-        <Box>
+        <Image src={currentTrack?.cover || MusicCover} height={"55px"} borderRadius={"5px"} paddingEnd={"100px"}></Image>
+        <Box position={"absolute"} left={"75px"}>
           <Text>{currentTrack?.title || "Choose a Song"}</Text>
           <Text
             fontSize={"14px"}
