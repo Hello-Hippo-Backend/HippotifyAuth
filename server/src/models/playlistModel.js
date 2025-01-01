@@ -18,7 +18,7 @@ const getPlaylistByUserId = async (userId) => {
      WHERE user_id = ?`,
     [userId]
   );
-  return playlist[0];
+  return playlist;
 };
 
 const getPlaylistById = async (playlistId, userId) => {
@@ -30,12 +30,12 @@ const getPlaylistById = async (playlistId, userId) => {
      WHERE p.id = ? AND (p.user_id = ? OR p.type = 'Public')`,
     [playlistId, userId]
   );
-  return playlist;
+  return playlist[0];
 };
 
 const getPlaylistTracks = async (playlistId) => {
   const [tracks] = await db.promise().query(
-    `SELECT pt.id, t.title, t.cover, t.artist, t.album, 
+    `SELECT pt.id, t.id track_id, t.title, t.cover, t.artist, t.album, 
             DATE_FORMAT(pt.created_at, '%b %d, %Y') AS date_added,
             FLOOR(t.duration / 60) AS duration_minutes, 
             t.duration % 60 AS duration_seconds
@@ -72,6 +72,16 @@ const removeTrackFromPlaylist = async (playlistId, playlistTrackId) => {
   );
 };
 
+const createDefaultPlaylist = async (userId) => {
+  const [response] = await db.promise().query(
+    `INSERT INTO playlists (cover, user_id, title, description, type)
+     VALUE ('https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da849d25907759522a25b86a3033', ?, 
+     'Camper Playlist', 'This is a playlist for camper', 'Private')`,
+    [userId]
+  );
+  return { playlist_id: response.insertId };
+};
+
 module.exports = {
   getAllPlaylistsByUser,
   getPlaylistByUserId,
@@ -80,4 +90,5 @@ module.exports = {
   updatePlaylist,
   addTrackToPlaylist,
   removeTrackFromPlaylist,
+  createDefaultPlaylist,
 };

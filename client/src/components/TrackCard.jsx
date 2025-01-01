@@ -11,15 +11,14 @@ import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
 import { SlTrash } from "react-icons/sl";
 import { axiosInstance } from "../utils/axiosInstance";
 
-
-export default function TrackCard({ id, isPrivate, track, index, onRemove }) {
+export default function TrackCard({ id, isOwned, track, index, onRemove }) {
   const [open, setOpen] = useState(false);
-  const [playlist, setPlaylist] = useState([]);
-  
+  const [playlists, setPlaylists] = useState([]);
+
   async function setPlaylistData() {
     try {
       const response = await axiosInstance.get("/playlists/owned");
-      setPlaylist(response.data.data);
+      setPlaylists(response.data.data);
     } catch (error) {
       console.log(error);
       return error.response.data;
@@ -29,10 +28,10 @@ export default function TrackCard({ id, isPrivate, track, index, onRemove }) {
     setPlaylistData();
   }, []);
 
-  const addSongToMyPlaylist = async () => {
+  const addSongToMyPlaylist = async (playlistId) => {
     try {
-      await axiosInstance.post(`/playlists/${playlist.id}/track/${track.id}`);
-      alert(`Successfully Add "${track.title}" to playlist`)
+      await axiosInstance.post(`/playlists/${playlistId}/track/${track.track_id}`);
+      alert(`Successfully Add "${track.title}" to playlist`);
       console.log("Add to my playlist", track.id);
     } catch (error) {
       return error.response.data;
@@ -41,11 +40,7 @@ export default function TrackCard({ id, isPrivate, track, index, onRemove }) {
 
   const removeSongFromPlaylist = async () => {
     try {
-      if (!id || !playlist.id) {
-        console.error("ID or Playlist ID is missing");
-        return;
-      }
-      await axiosInstance.delete(`/playlists/${id}/track/${playlist.id}`);
+      await axiosInstance.delete(`/playlists/${id}/track/${track.id}`);
       onRemove(track.id);
       console.log("Remove from my playlist", track.id);
     } catch (error) {
@@ -87,33 +82,43 @@ export default function TrackCard({ id, isPrivate, track, index, onRemove }) {
           </PopoverTrigger>
           <PopoverContent background={"gray.900"} width={"100%"}>
             <PopoverBody padding={"10px"}>
-            {isPrivate ? (
-                <Button
-                  variant={"plain"}
-                  justifyContent={"start"}
-                  align={"center"}
-                  gap={"10px"}
-                  color={"gray.400"}
-                  _hover={{ color: "white" }}
-                  onClick={() => removeSongFromPlaylist()}
-                >
-                  <SlTrash />
-                  <Text>Remove from this playlist</Text>
-                </Button>
-              ) : (
-                <Button
-                  variant={"plain"}
-                  justifyContent={"start"}
-                  align={"center"}
-                  gap={"10px"}
-                  color={"gray.400"}
-                  _hover={{ color: "white" }}
-                  onClick={() => addSongToMyPlaylist()}
-                >
-                  <FaPlus />
-                  <Text>Add to my playlist</Text>
-                </Button>
-              )}
+              <Flex
+                flexWrap={"wrap"}
+                flexDir={"column"}
+                gap={"20px"}
+                justifyContent={"flex-start"}
+              >
+                {isOwned ? (
+                  <Button
+                    variant={"plain"}
+                    justifyContent={"start"}
+                    align={"center"}
+                    gap={"10px"}
+                    color={"gray.400"}
+                    _hover={{ color: "white" }}
+                    onClick={() => removeSongFromPlaylist()}
+                  >
+                    <SlTrash />
+                    <Text>Remove from this playlist</Text>
+                  </Button>
+                ) : (
+                  playlists?.map((playlist) => (
+                    <Button
+                      key={playlist.id}
+                      variant={"plain"}
+                      justifyContent={"start"}
+                      align={"center"}
+                      gap={"10px"}
+                      color={"gray.400"}
+                      _hover={{ color: "white" }}
+                      onClick={() => addSongToMyPlaylist(playlist.id)}
+                    >
+                      <FaPlus />
+                      <Text>Add to {playlist.title}</Text>
+                    </Button>
+                  ))
+                )}
+              </Flex>
             </PopoverBody>
           </PopoverContent>
         </PopoverRoot>

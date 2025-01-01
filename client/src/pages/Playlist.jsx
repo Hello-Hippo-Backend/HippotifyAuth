@@ -28,7 +28,7 @@ import { axiosInstance } from "../utils/axiosInstance";
 export default function Playlist() {
   const id = useParams().id;
   const [playlist, setPlaylist] = useState([]);
-  const [newPlaylistTitle, setNewPlatlistTitle] = useState("");
+  const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const navigate = useNavigate();
 
@@ -47,19 +47,19 @@ export default function Playlist() {
 
   const updatePlaylistDetail = async () => {
     try {
-      await axiosInstance.put(`/playlists/${playlist?.id}`,{
-        title: newPlaylistTitle || playlist.title, 
-        description: newDescription || playlist.description
+      await axiosInstance.put(`/playlists/${playlist?.id}`, {
+        title: newTitle || playlist.title,
+        description: newDescription || playlist.description,
       });
 
       setPlaylist((prevState) => ({
         ...prevState,
-        title: updatedTitle,
-        description: updatedDescription,
+        title: newTitle || playlist.title,
+        description: newDescription || playlist.description,
       }));
 
-      alert(`Playlist updated successfully`)
-      console.log("Update playlist detail", newPlaylistTitle, newDescription);
+      alert(`Playlist updated successfully`);
+      console.log("Update playlist detail", newTitle, newDescription);
     } catch (error) {
       return error.response.data;
     }
@@ -96,7 +96,7 @@ export default function Playlist() {
             boxShadow="0 4px 6px rgba(0, 0, 0, 0.3)"
             borderRadius={"8px"}
           ></Image>
-          {!(playlist?.edit_access) && (
+          {!playlist?.edit_access && (
             <Box>
               <Text paddingBottom={"15px"}>{playlist.type}</Text>
               <Heading
@@ -124,30 +124,30 @@ export default function Playlist() {
           {playlist?.edit_access && (
             <DialogRoot placement={"center"}>
               <DialogTrigger asChild>
-          <Box>
-            <Text paddingBottom={"15px"}>{playlist.type} Playlist</Text>
-            <Heading
-              fontSize={"60px"}
-              fontWeight={"bold"}
-              paddingBottom={"20px"}
-            >
-              {playlist.title}
-            </Heading>
-            <Text color={"gray.300"}>{playlist.description}</Text>
-            <Flex
-              color={"gray.400"}
-              fontSize={"14px"}
-              fontWeight={"600"}
-              pt={"10px"}
-              gap={"5px"}
-            >
-              <Image src={playlist.image_url} height={"22px"} />
-              <Text>
-                {playlist.author} - {playlist.tracks?.length} songs
-              </Text>
-            </Flex>
-          </Box>
-          </DialogTrigger>
+                <Box>
+                  <Text paddingBottom={"15px"}>{playlist.type} Playlist</Text>
+                  <Heading
+                    fontSize={"60px"}
+                    fontWeight={"bold"}
+                    paddingBottom={"20px"}
+                  >
+                    {playlist.title}
+                  </Heading>
+                  <Text color={"gray.300"}>{playlist.description}</Text>
+                  <Flex
+                    color={"gray.400"}
+                    fontSize={"14px"}
+                    fontWeight={"600"}
+                    pt={"10px"}
+                    gap={"5px"}
+                  >
+                    <Image src={playlist.image_url} height={"22px"} />
+                    <Text>
+                      {playlist.author} - {playlist.tracks?.length} songs
+                    </Text>
+                  </Flex>
+                </Box>
+              </DialogTrigger>
               <DialogContent padding={"20px"} backgroundColor={"gray.800"}>
                 <DialogHeader>
                   <DialogTitle>Edit details</DialogTitle>
@@ -165,7 +165,8 @@ export default function Playlist() {
                         placeholder={playlist.title}
                         bgColor={"gray.700"}
                         padding={"10px"}
-                        onChange={(e) => setNewPlatlistTitle(e.target.value)}
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
                       />
                       <Textarea
                         mt={"20px"}
@@ -173,6 +174,7 @@ export default function Playlist() {
                         bgColor={"gray.700"}
                         padding={"10px"}
                         height={"70%"}
+                        value={newDescription}
                         onChange={(e) => setNewDescription(e.target.value)}
                       />
                     </Box>
@@ -228,8 +230,8 @@ export default function Playlist() {
             {playlist.tracks?.map((track, index) => (
               <TrackCard
                 key={track.id}
-                id={track.id}
-                isPrivate={playlist.type === "Private" ? true : false}
+                id={playlist.id}
+                isOwned={playlist.edit_access}
                 track={track}
                 index={index}
                 onRemove={handleTrackRemoval}

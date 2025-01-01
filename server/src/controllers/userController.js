@@ -1,9 +1,9 @@
 const { getUserById } = require("../models/userModel");
 
 const getUser = async (req, res) => {
+  const userId = req.user.id;
   try {
-    const user_id = req.user.id;
-    const user = await getUserById(user_id);
+    const user = await getUserById(userId);
     return res.status(200).json({
       success: true,
       data: user,

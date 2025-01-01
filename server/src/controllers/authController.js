@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const authModel = require("../models/authModel");
+const { createDefaultPlaylist } = require("../models/playlistModel");
 
 const signin = async (req, res) => {
   const { username, password } = req.body;
@@ -91,18 +92,9 @@ const signup = async (req, res) => {
       });
     }
 
-    await authModel.createUser(username, email, password);
+    const userId = await authModel.createUser(username, email, password);
 
-    const userId = await authModel.getUserId(username, email);
-    if (!userId) {
-      return res.status(500).json({
-        success: false,
-        data: null,
-        message: "Failed to retrieve user ID after creation",
-      });
-    }
-
-    await authModel.createDefaultPlaylist(userId);
+    await createDefaultPlaylist(userId);
 
     return res.status(201).json({
       success: true,
