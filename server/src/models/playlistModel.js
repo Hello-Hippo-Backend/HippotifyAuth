@@ -1,6 +1,6 @@
-const db = require("../config/database");
+import db from "../config/database.js";
 
-const getAllPlaylistsByUser = async (userId) => {
+export const getAllPlaylistsByUser = async (userId) => {
   const [playlists] = await db.promise().query(
     `SELECT p.id, p.title, p.cover
      FROM playlists p
@@ -11,7 +11,7 @@ const getAllPlaylistsByUser = async (userId) => {
   return playlists;
 };
 
-const getPlaylistByUserId = async (userId) => {
+export const getPlaylistByUserId = async (userId) => {
   const [playlist] = await db.promise().query(
     `SELECT id, title 
      FROM playlists
@@ -21,7 +21,7 @@ const getPlaylistByUserId = async (userId) => {
   return playlist;
 };
 
-const getPlaylistById = async (playlistId, userId) => {
+export const getPlaylistById = async (playlistId, userId) => {
   const [playlist] = await db.promise().query(
     `SELECT p.id, p.title, p.description, p.cover,
             u.id as author_id, u.image_url, u.username AS author, p.type
@@ -33,12 +33,11 @@ const getPlaylistById = async (playlistId, userId) => {
   return playlist[0];
 };
 
-const getPlaylistTracks = async (playlistId) => {
+export const getPlaylistTracks = async (playlistId) => {
   const [tracks] = await db.promise().query(
     `SELECT pt.id, t.id track_id, t.title, t.cover, t.artist, t.album, 
             DATE_FORMAT(pt.created_at, '%b %d, %Y') AS date_added,
-            FLOOR(t.duration / 60) AS duration_minutes, 
-            t.duration % 60 AS duration_seconds
+            t.duration
      FROM playlist_tracks pt
      JOIN tracks t ON pt.track_id = t.id
      WHERE pt.playlist_id = ?`,
@@ -47,7 +46,7 @@ const getPlaylistTracks = async (playlistId) => {
   return tracks;
 };
 
-const updatePlaylist = async (playlistId, title, description) => {
+export const updatePlaylist = async (playlistId, title, description) => {
   await db.promise().query(
     `UPDATE playlists 
      SET title = ?, description = ?
@@ -56,7 +55,7 @@ const updatePlaylist = async (playlistId, title, description) => {
   );
 };
 
-const addTrackToPlaylist = async (playlistId, trackId) => {
+export const addTrackToPlaylist = async (playlistId, trackId) => {
   await db.promise().query(
     `INSERT INTO playlist_tracks (playlist_id, track_id)
      VALUES (?, ?)`,
@@ -64,7 +63,7 @@ const addTrackToPlaylist = async (playlistId, trackId) => {
   );
 };
 
-const removeTrackFromPlaylist = async (playlistId, playlistTrackId) => {
+export const removeTrackFromPlaylist = async (playlistId, playlistTrackId) => {
   await db.promise().query(
     `DELETE FROM playlist_tracks 
      WHERE id = ? AND playlist_id = ?`,
@@ -72,7 +71,7 @@ const removeTrackFromPlaylist = async (playlistId, playlistTrackId) => {
   );
 };
 
-const createDefaultPlaylist = async (userId) => {
+export const createDefaultPlaylist = async (userId) => {
   const [response] = await db.promise().query(
     `INSERT INTO playlists (cover, user_id, title, description, type)
      VALUE ('https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da849d25907759522a25b86a3033', ?, 
@@ -80,15 +79,4 @@ const createDefaultPlaylist = async (userId) => {
     [userId]
   );
   return { playlist_id: response.insertId };
-};
-
-module.exports = {
-  getAllPlaylistsByUser,
-  getPlaylistByUserId,
-  getPlaylistById,
-  getPlaylistTracks,
-  updatePlaylist,
-  addTrackToPlaylist,
-  removeTrackFromPlaylist,
-  createDefaultPlaylist,
 };

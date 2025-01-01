@@ -1,11 +1,12 @@
-const express = require("express");
-const authRoute = express.Router();
-const authController = require("../controllers/authController");
-const authenticateToken = require("../middlewares/authenticateToken");
+import express from "express";
+import { signin, signup, signout } from "../controllers/authController.js";
+import authenticateToken from "../middlewares/authenticateToken.js";
 
-authRoute.post("/signin", authController.signin);
-authRoute.post("/signup", authController.signup);
-authRoute.post("/signout", authController.signout);
+const authRoute = express.Router();
+
+authRoute.post("/signin", signin);
+authRoute.post("/signup", signup);
+authRoute.post("/signout", signout);
 
 // Check Authorization
 authRoute.get("/", authenticateToken, (req, res) => {
@@ -19,4 +20,4 @@ authRoute.get("/", authenticateToken, (req, res) => {
   });
 });
 
-module.exports = authRoute;
+export default authRoute;

@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const authModel = require("../models/authModel");
-const { createDefaultPlaylist } = require("../models/playlistModel");
+import jwt from "jsonwebtoken";
+import * as authModel from "../models/authModel.js";
+import { createDefaultPlaylist } from "../models/playlistModel.js";
 
-const signin = async (req, res) => {
+export const signin = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -62,7 +62,7 @@ const signin = async (req, res) => {
   }
 };
 
-const signup = async (req, res) => {
+export const signup = async (req, res) => {
   const { email, username, password } = req.body;
 
   if (!email || !username || !password) {
@@ -111,7 +111,7 @@ const signup = async (req, res) => {
   }
 };
 
-const signout = (req, res) => {
+export const signout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     sameSite: "Strict",
@@ -123,5 +123,3 @@ const signout = (req, res) => {
     message: "Logged out successfully",
   });
 };
-
-module.exports = { signin, signup, signout };

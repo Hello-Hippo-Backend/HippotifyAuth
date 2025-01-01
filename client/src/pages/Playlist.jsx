@@ -116,7 +116,7 @@ export default function Playlist() {
               >
                 <Image src={playlist.image_url} height={"22px"} />
                 <Text>
-                  {playlist.author} - {playlist.tracks?.length} songs
+                  {playlist.author} - {playlist.tracks?.length} songs, {playlist.duration}
                 </Text>
               </Flex>
             </Box>
@@ -143,7 +143,7 @@ export default function Playlist() {
                   >
                     <Image src={playlist.image_url} height={"22px"} />
                     <Text>
-                      {playlist.author} - {playlist.tracks?.length} songs
+                      {playlist.author} - {playlist.tracks?.length} songs, {playlist.duration}
                     </Text>
                   </Flex>
                 </Box>

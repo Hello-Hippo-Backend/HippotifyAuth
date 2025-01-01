@@ -1,6 +1,6 @@
-const { getUserById } = require("../models/userModel");
+import { getUserById } from "../models/userModel.js";
 
-const getUser = async (req, res) => {
+export const getUser = async (req, res) => {
   const userId = req.user.id;
   try {
     const user = await getUserById(userId);
@@ -17,5 +17,3 @@ const getUser = async (req, res) => {
     });
   }
 };
-
-module.exports = { getUser };

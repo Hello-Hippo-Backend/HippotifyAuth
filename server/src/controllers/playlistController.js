@@ -1,6 +1,7 @@
-const playlistModel = require("../models/playlistModel");
+import * as playlistModel from "../models/playlistModel.js";
+import { timeFormatHMS, timeFormat } from "../utils/timeFormatChange.js";
 
-const getAllPlaylistByUser = async (req, res) => {
+export const getAllPlaylistByUser = async (req, res) => {
   const userId = req.user.id;
   try {
     const playlists = await playlistModel.getAllPlaylistsByUser(userId);
@@ -8,7 +9,7 @@ const getAllPlaylistByUser = async (req, res) => {
     return res.json({
       success: true,
       data: playlists,
-      message: "Playlist retrived successfully",
+      message: "Playlist retrieved successfully",
     });
   } catch (error) {
     console.error("Error:", error);
@@ -20,7 +21,7 @@ const getAllPlaylistByUser = async (req, res) => {
   }
 };
 
-const getPlaylistByUserId = async (req, res) => {
+export const getPlaylistByUserId = async (req, res) => {
   const userId = req.user.id;
   try {
     const playlists = await playlistModel.getPlaylistByUserId(userId);
@@ -28,7 +29,7 @@ const getPlaylistByUserId = async (req, res) => {
     return res.json({
       success: true,
       data: playlists,
-      message: "Playlist retrived successfully",
+      message: "Playlist retrieved successfully",
     });
   } catch (error) {
     console.error("Error:", error);
@@ -40,14 +41,14 @@ const getPlaylistByUserId = async (req, res) => {
   }
 };
 
-const getPlaylistById = async (req, res) => {
+export const getPlaylistById = async (req, res) => {
   const { playlistId } = req.params;
   const userId = req.user.id;
   if (!playlistId) {
     return res.status(400).json({
       success: false,
       data: null,
-      message: "Playlist ID are required",
+      message: "Playlist ID is required",
     });
   }
 
@@ -62,16 +63,24 @@ const getPlaylistById = async (req, res) => {
     }
 
     const tracks = await playlistModel.getPlaylistTracks(playlistId);
+    const totalDurationInSeconds = tracks.reduce((total, track) => {
+      return total + track.duration;
+    }, 0);
+
     const response = {
       ...playlist,
-      tracks: tracks,
+      duration: timeFormatHMS(totalDurationInSeconds),
+      tracks: tracks.map((track) => ({
+        ...track,
+        duration: timeFormat(track.duration),
+      })),
       edit_access: playlist.author_id === userId,
     };
 
     return res.status(200).json({
       success: true,
       data: response,
-      message: "Playlist retrived successfully",
+      message: "Playlist retrieved successfully",
     });
   } catch (error) {
     console.error("Error:", error);
@@ -83,14 +92,14 @@ const getPlaylistById = async (req, res) => {
   }
 };
 
-const updatePlayList = async (req, res) => {
+export const updatePlayList = async (req, res) => {
   const { playlistId } = req.params;
   const { title, description } = req.body;
   if (!playlistId || !title || !description) {
     return res.status(400).json({
       success: false,
       data: null,
-      message: "Playlist ID, Title and Description are required",
+      message: "Playlist ID, Title, and Description are required",
     });
   }
 
@@ -112,7 +121,7 @@ const updatePlayList = async (req, res) => {
   }
 };
 
-const addTracksToPlayList = async (req, res) => {
+export const addTracksToPlayList = async (req, res) => {
   const { playlistId, trackId } = req.params;
   if (!playlistId || !trackId) {
     return res.status(400).json({
@@ -140,9 +149,9 @@ const addTracksToPlayList = async (req, res) => {
   }
 };
 
-const removeTrackFromPlaylist = async (req, res) => {
+export const removeTrackFromPlaylist = async (req, res) => {
   const { playlistId, playlistTrackId } = req.params;
-  if (!playlistId || ! playlistTrackId) {
+  if (!playlistId || !playlistTrackId) {
     return res.status(400).json({
       success: false,
       data: null,
@@ -168,7 +177,7 @@ const removeTrackFromPlaylist = async (req, res) => {
   }
 };
 
-const createNewPlaylist = async (req, res) => {
+export const createNewPlaylist = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -186,14 +195,4 @@ const createNewPlaylist = async (req, res) => {
       message: "Internal server error",
     });
   }
-};
-
-module.exports = {
-  getAllPlaylistByUser,
-  getPlaylistByUserId,
-  getPlaylistById,
-  updatePlayList,
-  addTracksToPlayList,
-  removeTrackFromPlaylist,
-  createNewPlaylist
 };
