@@ -1,24 +1,21 @@
-const db = require('../config/database');
+const { getUserById } = require("../models/userModel");
 
-const getUserById = async (req, res) => {
-      const user_id = req.user.id;
-      try {
-        const [user] = await db.promise().query(
-          `SELECT id, image_url, username
-          FROM users WHERE id = ?`,[user_id]
-        )
-        return res.json({
-          success: true,
-          data: user[0],
-          error: null,
-        });
-      } catch (error) {
-        console.error("Error:", error);
-        return res.status(500).json({
-          success: false,
-          data: null,
-          error: "Internal server error",
-        });
-      }
-    };
-module.exports = getUserById
+const getUser = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const user = await getUserById(user_id);
+    return res.status(200).json({
+      success: true,
+      data: user,
+      message: "User retrieved successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      data: null,
+      message: "Internal server error",
+    });
+  }
+};
+
+module.exports = { getUser };

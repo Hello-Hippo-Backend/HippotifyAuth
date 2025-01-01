@@ -1,12 +1,12 @@
 const express = require("express");
-const { updatePlayList, addTracksToPlayList, removeTrackFromPlaylist, getAllPlaylistByUser, getPlaylistById, getPlaylistByUserId } = require("../controllers/playlistController");
+const playlistController = require("../controllers/playlistController");
 const playlistRoute = express.Router();
 
-playlistRoute.get('/all', getAllPlaylistByUser)
-playlistRoute.get('/private', getPlaylistByUserId)
-playlistRoute.get('/:id', getPlaylistById)
-playlistRoute.put('/:id', updatePlayList)
-playlistRoute.post('/track', addTracksToPlayList)
-playlistRoute.delete('/track', removeTrackFromPlaylist)
+playlistRoute.get('/', playlistController.getAllPlaylistByUser)
+playlistRoute.get('/owned', playlistController.getPlaylistByUserId)
+playlistRoute.get('/:playlistId', playlistController.getPlaylistById)
+playlistRoute.put('/:playlistId', playlistController.updatePlayList)
+playlistRoute.post('/:playlistId/tracks/:trackId', playlistController.addTracksToPlayList)
+playlistRoute.delete('/:playlistId/tracks/:playlistTrackId', playlistController.removeTrackFromPlaylist)
 
 module.exports = playlistRoute;

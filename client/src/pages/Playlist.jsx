@@ -34,7 +34,7 @@ export default function Playlist() {
 
   const setPlaylistData = async () => {
     try {
-      const response = await axiosInstance.get(`/playlist/${id || 1}`);
+      const response = await axiosInstance.get(`/playlists/${id || 1}`);
       setPlaylist(response.data.data);
     } catch (error) {
       if (error.response?.status === 403) {
@@ -45,16 +45,9 @@ export default function Playlist() {
     }
   };
 
-  const handleTrackRemoval = (id) => {
-    setPlaylist((prevState) => ({
-      ...prevState,
-      tracks: prevState.tracks.filter((track) => track.id !== id),
-    }));
-  };
-
   const updatePlaylistDetail = async () => {
     try {
-      await axiosInstance.put(`/playlist/${playlist?.id}`,{
+      await axiosInstance.put(`/playlists/${playlist?.id}`,{
         title: newPlaylistTitle || playlist.title, 
         description: newDescription || playlist.description
       });
@@ -74,6 +67,13 @@ export default function Playlist() {
   useEffect(() => {
     setPlaylistData();
   }, [id]);
+
+  const handleTrackRemoval = (id) => {
+    setPlaylist((prevState) => ({
+      ...prevState,
+      tracks: prevState.tracks.filter((track) => track.id !== id),
+    }));
+  };
 
   return (
     <>

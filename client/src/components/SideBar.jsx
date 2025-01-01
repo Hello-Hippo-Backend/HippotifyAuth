@@ -10,7 +10,7 @@ export default function SideBar() {
 
   async function setPlaylistData() {
     try {
-      const response = await axiosInstance.get("/playlist/all");
+      const response = await axiosInstance.get("/playlists");
       setPlaylist(response.data.data);
     } catch (error) {
       return error.response.data;

@@ -9,7 +9,7 @@ const authMiddleware = (Component) => {
 
     const verifyAuth = async () => {
       try {
-        const response = await axiosInstance.get('/authorize');
+        const response = await axiosInstance.get('/auth');
         setAuthenticated(response.data);
       } catch (error) {
         setAuthenticated(false);

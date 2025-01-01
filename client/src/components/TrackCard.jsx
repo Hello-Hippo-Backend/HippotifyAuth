@@ -18,7 +18,7 @@ export default function TrackCard({ id, isPrivate, track, index, onRemove }) {
   
   async function setPlaylistData() {
     try {
-      const response = await axiosInstance.get("/playlist/private");
+      const response = await axiosInstance.get("/playlists/owned");
       setPlaylist(response.data.data);
     } catch (error) {
       console.log(error);
@@ -29,6 +29,15 @@ export default function TrackCard({ id, isPrivate, track, index, onRemove }) {
     setPlaylistData();
   }, []);
 
+  const addSongToMyPlaylist = async () => {
+    try {
+      await axiosInstance.post(`/playlists/${playlist.id}/track/${track.id}`);
+      alert(`Successfully Add "${track.title}" to playlist`)
+      console.log("Add to my playlist", track.id);
+    } catch (error) {
+      return error.response.data;
+    }
+  };
 
   const removeSongFromPlaylist = async () => {
     try {
@@ -36,24 +45,9 @@ export default function TrackCard({ id, isPrivate, track, index, onRemove }) {
         console.error("ID or Playlist ID is missing");
         return;
       }
-      await axiosInstance.delete(`/playlist/track`,{data: {
-        id: id,
-        playlist_id: playlist.id}
-      });
+      await axiosInstance.delete(`/playlists/${id}/track/${playlist.id}`);
       onRemove(track.id);
       console.log("Remove from my playlist", track.id);
-    } catch (error) {
-      return error.response.data;
-    }
-  };
-  const addSongToMyPlaylist = async () => {
-    try {
-      await axiosInstance.post(`/playlist/track`,{
-        playlist_id: playlist.id,
-        track_id: track.id
-      });
-      alert(`Successfully Add "${track.title}" to playlist`)
-      console.log("Add to my playlist", track.id);
     } catch (error) {
       return error.response.data;
     }

@@ -21,11 +21,12 @@ export default function Signup() {
       alert("Password and confirm password do not match");
     } else {
       try {
-        await axiosInstance.post("/user/signup", {
+        await axiosInstance.post("/auth/signup", {
           username: username,
           email: email,
           password: password,
         });
+        alert(response.data.message);
         navigate("/signin");
       } catch (error) {
         return error.response.data;

@@ -24,7 +24,7 @@ export default function Navigation() {
 
   const setUserData = async () => {
     try {
-      const response = await axiosInstance.get("/user");
+      const response = await axiosInstance.get("/users");
       setUser(response.data.data);
     } catch (error) {
       return error.response.data;
@@ -36,7 +36,7 @@ export default function Navigation() {
 
   const handleSignout = async () => {
     try {
-      await axiosInstance.post("/user/signout");
+      await axiosInstance.post("/auth/signout");
       navigate("/signin");
     } catch (error) {
       return error.response.data;

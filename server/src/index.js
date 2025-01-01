@@ -1,13 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+
 const app = express();
 const port = 3000;
-
 const connection = require('./config/database');
-const playlistRoute = require('./routes/playlistRoutes');
+
+const authRoute = require('./routes/authRoutes');
 const userRoute = require('./routes/userRoutes');
-const verifyAccessToken = require('./middlewares/authenticateToken');
+const playlistRoute = require('./routes/playlistRoutes');
+
+const authenticateToken = require('./middlewares/authenticateToken');
 
 app.use(cookieParser());
 app.use(express.json());
@@ -16,18 +19,9 @@ app.use(cors({
     credentials: true, // Allow cookies and other credentials
 }));
 
-app.use("/api/user", userRoute);
-app.get("/api/authorize", verifyAccessToken, (req, res) => {
-    return res.status(200).json({
-      condition: "success",
-      data: {
-        id: req.user.id,
-        role: req.user.role,
-      },
-      message: "User is authorized",
-    });
-});
-app.use("/api/playlist", verifyAccessToken, playlistRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/users", authenticateToken, userRoute);
+app.use("/api/playlists", authenticateToken, playlistRoute);
 
 connection.connect((err) => {
     if(err){

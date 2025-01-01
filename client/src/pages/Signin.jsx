@@ -13,12 +13,14 @@ export default function Signin() {
 
     const handleSignin = async () => {
       try {
-        await axiosInstance.post("/user/signin", {
+        const response = await axiosInstance.post("/auth/signin", {
           username: username,
           password: password,
         });
+        alert(response.data.message);
         navigate("/");
       } catch (error) {
+        alert(error.response.data.message);
         return error.response.data;
       }
     }
