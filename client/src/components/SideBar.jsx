@@ -3,10 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { Flex, Box, Image } from "@chakra-ui/react";
 import { Button } from "../components/ui/button";
 import { axiosInstance } from "../utils/axiosInstance";
+import { FaRegFolder } from "react-icons/fa6";
 
 export default function SideBar() {
   const navigate = useNavigate();
   const [playlist, setPlaylist] = useState([]);
+  const [user, setUser] = useState();
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axiosInstance.get("/users");
+      setUser(response.data.data);
+    } catch (error) {
+      return error.response.data;
+    }
+  };
 
   async function fetchPlaylistData() {
     try {
@@ -17,6 +28,7 @@ export default function SideBar() {
     }
   }
   useEffect(() => {
+    fetchUserData();
     fetchPlaylistData();
   }, []);
 
@@ -32,7 +44,7 @@ export default function SideBar() {
         <Flex
           flexWrap={"wrap"}
           flexDir={"column"}
-          gap={"20px"}
+          gap={"15px"}
           justifyContent={"flex-start"}
         >
           {playlist.map((item) => (
@@ -49,6 +61,22 @@ export default function SideBar() {
               </Button>
             </Box>
           ))}
+          {user?.role === "Admin" && (
+            <Button
+              variant="plain"
+              display="block"
+              color="gray"
+              bgColor={"gray.800"}
+              width={"100%"}
+              height={"60px"}
+              _hover={{bgColor: "gray.700"}}
+              onClick={() => navigate("/playlist/admin")}
+            >
+              <Box display="flex" justifyContent="center" alignItems="center" >
+                <FaRegFolder />
+              </Box>
+            </Button>
+          )}
         </Flex>
       </Box>
     </Box>
