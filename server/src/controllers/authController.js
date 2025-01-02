@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import * as authModel from "../models/authModel.js";
 import { createDefaultPlaylist } from "../models/playlistModel.js";
+import bcrypt from "bcrypt";
 
 export const signin = async (req, res) => {
   const { username, password } = req.body;
@@ -24,33 +25,36 @@ export const signin = async (req, res) => {
       });
     }
 
-    if (password !== user.password) {
-      return res.status(401).json({
-        success: false,
-        data: null,
-        message: "Incorrect username or password",
+    // Hash password ver.
+    // const isPasswordValid = await bcrypt.compare(password, user.password);
+    // if (isPasswordValid) {
+    if (password === user.password) {
+      const token = jwt.sign(
+        { id: user.id, username: user.username, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "3h" }
+      );
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 3 * 60 * 60 * 1000, // 3 hours
+      });
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          id: user.id,
+          username: user.username,
+          role: user.role,
+        },
+        message: "Signed in successfully",
       });
     }
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "3h" }
-    );
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 3 * 60 * 60 * 1000, // 3 hours
-    });
-
-    return res.status(200).json({
-      success: true,
-      data: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-      },
-      message: "Signed in successfully",
+    return res.status(401).json({
+      success: false,
+      data: null,
+      message: "Incorrect username or password",
     });
   } catch (error) {
     console.error("Error during signin:", error);
@@ -92,6 +96,9 @@ export const signup = async (req, res) => {
       });
     }
 
+    // Hash password ver.
+    // const hashPass = await bcrypt.hash(password, 10);
+    // const userId = await authModel.createUser(username, email, hashPass);
     const userId = await authModel.createUser(username, email, password);
 
     await createDefaultPlaylist(userId);
@@ -114,7 +121,6 @@ export const signup = async (req, res) => {
 export const signout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "Strict",
   });
 
   return res.status(200).json({
