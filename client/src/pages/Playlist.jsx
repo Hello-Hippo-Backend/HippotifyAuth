@@ -28,10 +28,24 @@ import { axiosInstance } from "../utils/axiosInstance";
 export default function Playlist() {
   const id = useParams().id;
   const [playlist, setPlaylist] = useState([]);
+  const [ownedPlaylist, setOwnedPlaylist] = useState([]);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const navigate = useNavigate();
   const { handleTrackChange } = useOutletContext(); //called parent function (App.jsx)
+
+  async function fetchOwnedPlaylistData() {
+    try {
+      const response = await axiosInstance.get("/playlists/owned");
+      setOwnedPlaylists(response.data.data);
+    } catch (error) {
+      console.log(error);
+      return error.response.data;
+    }
+  }
+  useEffect(() => {
+    fetchOwnedPlaylistData();
+  }, []);
 
   const fetchPlaylistData = async () => {
     try {
@@ -229,6 +243,7 @@ export default function Playlist() {
                 isOwned={playlist.edit_access}
                 track={track}
                 index={index}
+                ownedPlaylist={ownedPlaylist}
                 onRemove={handleTrackRemoval}
                 onTrackClick={handleTrackChange}
               />

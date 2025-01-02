@@ -16,7 +16,12 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://loca÷lhost:5173", "http://localhost:8080"], // Allow requests from this origin
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:8080",
+      "http://patbook-air.local",
+      "http://helloworld24.sit.kmutt.ac.th"
+    ], // Allow requests from this origin
     credentials: true, // Allow cookies and other credentials
   })
 );

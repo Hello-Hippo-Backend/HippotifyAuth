@@ -8,9 +8,7 @@ services:
     env_file:
       - ./client/.env
     ports:
-      - "8080:80"
-    networks:
-      - app-network
+      - "80:80"
 
   backend:
     build:
@@ -22,24 +20,4 @@ services:
       - ./server/.env
     ports:
       - "3000:3000"
-    networks:
-      - app-network
-    # depends_on:
-    #   - database
-
-  # database:
-  #   image: mysql:latest
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: your_database_name
-  #     MYSQL_USER: user
-  #     MYSQL_PASSWORD: password
-  #   ports:
-  #     - "3306:3306"
-  #   networks:
-  #     - app-network
-
-networks:
-  app-network:
-    driver: bridge
+    # network_mode: "host"

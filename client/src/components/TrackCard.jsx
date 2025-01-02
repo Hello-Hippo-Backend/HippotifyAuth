@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { useState } from "react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import { Button } from "./ui/button";
 import {
   PopoverBody,
@@ -16,24 +16,11 @@ export default function TrackCard({
   isOwned,
   track,
   index,
+  ownedPlaylist,
   onRemove,
   onTrackClick,
 }) {
   const [open, setOpen] = useState(false);
-  const [playlists, setPlaylists] = useState([]);
-
-  async function fetchOwnedPlaylistData() {
-    try {
-      const response = await axiosInstance.get("/playlists/owned");
-      setPlaylists(response.data.data);
-    } catch (error) {
-      console.log(error);
-      return error.response.data;
-    }
-  }
-  useEffect(() => {
-    fetchOwnedPlaylistData();
-  }, []);
 
   const addSongToMyPlaylist = async (playlistId) => {
     try {
@@ -117,7 +104,7 @@ export default function TrackCard({
                     <Text>Remove from this playlist</Text>
                   </Button>
                 ) : (
-                  playlists?.map((playlist) => (
+                  ownedPlaylist?.map((playlist) => (
                     <Button
                       key={playlist.id}
                       variant={"plain"}
