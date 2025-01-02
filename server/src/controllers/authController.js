@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import * as authModel from "../models/authModel.js";
 import { createDefaultPlaylist } from "../models/playlistModel.js";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 
 export const signin = async (req, res) => {
   const { username, password } = req.body;
