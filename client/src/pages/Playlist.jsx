@@ -23,7 +23,11 @@ import {
 import { Button } from "../components/ui/button";
 import TrackCard from "../components/TrackCard";
 import { useEffect, useState } from "react";
-import { axiosInstance } from "../utils/axiosInstance";
+import {
+  fetchOwnedPlaylists,
+  fetchPlaylist,
+  updatePlaylist,
+} from "../services/playlistService";
 
 export default function Playlist() {
   const id = useParams().id;
@@ -34,48 +38,35 @@ export default function Playlist() {
   const navigate = useNavigate();
   const { handleTrackChange } = useOutletContext(); //called parent function (App.jsx)
 
-  async function fetchOwnedPlaylistData() {
-    try {
-      const response = await axiosInstance.get("/playlists/owned");
-      setOwnedPlaylists(response.data.data);
-    } catch (error) {
-      console.log(error);
-      return error.response.data;
-    }
-  }
+  const fetchOwnedPlaylistData = async () => {
+    const response = await fetchOwnedPlaylists();
+    setOwnedPlaylist(response);
+  };
   useEffect(() => {
     fetchOwnedPlaylistData();
   }, []);
 
   const fetchPlaylistData = async () => {
-    try {
-      const response = await axiosInstance.get(`/playlists/${id || 1}`);
-      setPlaylist(response.data.data);
-    } catch (error) {
-      if (error.response?.status === 403) {
-        alert("You are not authorized to access this playlist.");
-        navigate("/playlist");
-      }
-      return error.response.data;
+    const response = await fetchPlaylist(id);
+    setPlaylist(response);
+    if (response.status === 403) {
+      alert("You are not authorized to access this playlist.");
+      navigate("/playlist");
     }
   };
   useEffect(() => {
     fetchPlaylistData();
   }, [id]);
 
-  const updatePlaylistDetail = async () => {
-    try {
-      await axiosInstance.put(`/playlists/${playlist?.id}`, {
-        title: newTitle || playlist.title,
-        description: newDescription || playlist.description,
-      });
-
-      fetchPlaylistData();
-      alert(`Playlist updated successfully`);
-      console.log("Update playlist detail", newTitle, newDescription);
-    } catch (error) {
-      return error.response.data;
-    }
+  const updatePlaylistData = async () => {
+    await updatePlaylist(
+      playlist.id,
+      newTitle || playlist.title,
+      newDescription || playlist.description
+    );
+    fetchPlaylistData();
+    fetchOwnedPlaylistData();
+    alert(`Playlist updated successfully`);
   };
 
   const handleTrackRemoval = () => {
@@ -195,7 +186,7 @@ export default function Playlist() {
                     width="100px"
                     padding={"20px"}
                     borderRadius={"20px"}
-                    onClick={() => updatePlaylistDetail()}
+                    onClick={() => updatePlaylistData()}
                   >
                     Save
                   </Button>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { axiosInstance } from "../utils/axiosInstance";
+import { auth } from "../services/authService";
 
 const authMiddleware = (Component) => {
   return (props) => {
@@ -9,8 +9,8 @@ const authMiddleware = (Component) => {
 
     const verifyAuth = async () => {
       try {
-        const response = await axiosInstance.get("/auth");
-        setAuthenticated(response.data);
+        const response = await auth();
+        setAuthenticated(response);
       } catch (error) {
         setAuthenticated(false);
       } finally {

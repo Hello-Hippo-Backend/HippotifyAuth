@@ -6,10 +6,20 @@ import SideBar from "./components/SideBar";
 import MusicPlayer from "./components/MusicPlayer";
 
 import authMiddleware from "./middleware/authMiddleware";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchUser } from "./services/userService";
 
 function App() {
   const [currentTrack, setCurrentTrack] = useState(null);
+  const [user, setUser] = useState();
+
+  const fetchUserData = async () => {
+    const response = await fetchUser();
+    setUser(response);
+  };
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   const handleTrackChange = (track) => {
     setCurrentTrack(track);
@@ -17,7 +27,7 @@ function App() {
   return (
     <>
       <Box as="nav" position="fixed" top="0" left="0" right="0" zIndex="1000">
-        <Navigation />
+        <Navigation user={user} />
       </Box>
       <Flex pt="60px" pb="60px" height="100vh" overflow="hidden">
         <Box
@@ -28,7 +38,7 @@ function App() {
           ml="8px"
           bg="gray.100"
         >
-          <SideBar />
+          <SideBar role={user?.role} />
         </Box>
         <Box
           as="main"

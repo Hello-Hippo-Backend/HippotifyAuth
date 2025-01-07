@@ -2,33 +2,18 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Flex, Box, Image } from "@chakra-ui/react";
 import { Button } from "../components/ui/button";
-import { axiosInstance } from "../utils/axiosInstance";
 import { FaRegFolder } from "react-icons/fa6";
+import { fetchAllUserPlaylists } from "../services/playlistService";
 
-export default function SideBar() {
+export default function SideBar({ role }) {
   const navigate = useNavigate();
   const [playlist, setPlaylist] = useState([]);
-  const [user, setUser] = useState();
-
-  const fetchUserData = async () => {
-    try {
-      const response = await axiosInstance.get("/users");
-      setUser(response.data.data);
-    } catch (error) {
-      return error.response.data;
-    }
-  };
 
   async function fetchPlaylistData() {
-    try {
-      const response = await axiosInstance.get("/playlists");
-      setPlaylist(response.data.data);
-    } catch (error) {
-      return error.response.data;
-    }
+    const response = await fetchAllUserPlaylists();
+    setPlaylist(response);
   }
   useEffect(() => {
-    fetchUserData();
     fetchPlaylistData();
   }, []);
 
@@ -48,7 +33,6 @@ export default function SideBar() {
           justifyContent={"flex-start"}
         >
           {playlist.map((item) => (
-            <Box key={item.id}>
               <Button
                 key={item.id}
                 variant="plain"
@@ -59,9 +43,8 @@ export default function SideBar() {
               >
                 <Image src={item.cover} borderRadius={"8px"}></Image>
               </Button>
-            </Box>
           ))}
-          {user?.role === "Admin" && (
+          {role === "Admin" && (
             <Button
               variant="plain"
               display="block"
@@ -69,10 +52,10 @@ export default function SideBar() {
               bgColor={"gray.800"}
               width={"100%"}
               height={"60px"}
-              _hover={{bgColor: "gray.700"}}
+              _hover={{ bgColor: "gray.700" }}
               onClick={() => navigate("/playlist/admin")}
             >
-              <Box display="flex" justifyContent="center" alignItems="center" >
+              <Box display="flex" justifyContent="center" alignItems="center">
                 <FaRegFolder />
               </Box>
             </Button>

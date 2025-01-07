@@ -4,7 +4,7 @@ import IMG from "../../public/assets/images/UserProfilePicture.png";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "../components/ui/button";
-import { axiosInstance } from "../utils/axiosInstance";
+import { signup } from "../services/authService";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -20,18 +20,11 @@ export default function Signup() {
     } else if (password !== confirmPassword) {
       alert("Password and confirm password do not match");
     } else {
-      try {
-        await axiosInstance.post("/auth/signup", {
-          username: username,
-          email: email,
-          password: password,
-        });
-        alert(response.data.message);
+      const response = await signup(username, email, password);
+      alert(response.message);
+      if (response.success) {
         navigate("/signin");
-      } catch (error) {
-        return error.response.data;
       }
-      console.log("Sign up", username, email, password);
     }
   };
 

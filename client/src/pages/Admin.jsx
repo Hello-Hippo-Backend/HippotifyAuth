@@ -1,23 +1,19 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { axiosInstance } from "../utils/axiosInstance";
 import PlayListCard from "../components/PlayListCard";
+import { fetchAllPlaylists } from "../services/playlistService";
 
 export default function Admin() {
   const [playlists, setPlaylists] = useState([]);
   const navigate = useNavigate();
 
   const fetchPlaylistsData = async () => {
-    try {
-      const response = await axiosInstance.get(`/playlists/admin/all`);
-      setPlaylists(response.data.data);
-    } catch (error) {
-      if (error.response?.status === 403) {
-        alert("You are not authorized to access this page.");
-        navigate("/playlist");
-      }
-      return error.response.data;
+    const response = await fetchAllPlaylists();
+    setPlaylists(response);
+    if (response.status === 403) {
+      alert("You are not authorized to access this page.");
+      navigate("/playlist");
     }
   };
   useEffect(() => {
@@ -36,6 +32,7 @@ export default function Admin() {
         <Flex flexWrap={"wrap"} gap={"10px"} justifyContent={"flex-start"}>
           {playlists.map((playlist) => (
             <PlayListCard
+              key={playlist.id}
               id={playlist.id}
               cover={playlist.cover}
               title={playlist.title}

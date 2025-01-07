@@ -15,32 +15,14 @@ import {
 import { FaChevronLeft } from "react-icons/fa6";
 import { GrHomeRounded } from "react-icons/gr";
 import { FiSearch } from "react-icons/fi";
-import { axiosInstance } from "../utils/axiosInstance";
-import { useEffect, useState } from "react";
+import { signout } from "../services/authService";
 
-export default function Navigation() {
+export default function Navigation({ user }) {
   const navigate = useNavigate();
-  const [user, setUser] = useState();
-
-  const fetchUserData = async () => {
-    try {
-      const response = await axiosInstance.get("/users");
-      setUser(response.data.data);
-    } catch (error) {
-      return error.response.data;
-    }
-  };
-  useEffect(() => {
-    fetchUserData();
-  }, []);
 
   const handleSignout = async () => {
-    try {
-      await axiosInstance.post("/auth/signout");
-      navigate("/signin");
-    } catch (error) {
-      return error.response.data;
-    }
+    await signout();
+    navigate("/signin");
   };
 
   return (

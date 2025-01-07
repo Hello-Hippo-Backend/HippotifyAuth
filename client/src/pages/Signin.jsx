@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Box, Flex, Image, Heading, Text, Tabs, Input } from "@chakra-ui/react";
+import { Box, Flex, Image, Heading, Text, Input } from "@chakra-ui/react";
 import IMG from "../../public/assets/images/UserProfilePicture.png";
 import { useNavigate } from "react-router-dom";
-
 import { Button } from "../components/ui/button";
-import { axiosInstance } from "../utils/axiosInstance";
+import { signin } from "../services/authService";
 
 export default function Signin() {
   const navigate = useNavigate();
@@ -12,16 +11,10 @@ export default function Signin() {
   const [password, setPassword] = useState("");
 
   const handleSignin = async () => {
-    try {
-      const response = await axiosInstance.post("/auth/signin", {
-        username: username,
-        password: password,
-      });
-      alert(response.data.message);
+    const response = await signin(username, password);
+    alert(response.message);
+    if (response.success) {
       navigate("/playlist");
-    } catch (error) {
-      alert(error.response.data.message);
-      return error.response.data;
     }
   };
 

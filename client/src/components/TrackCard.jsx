@@ -9,7 +9,7 @@ import {
 } from "./ui/popover";
 import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
 import { SlTrash } from "react-icons/sl";
-import { axiosInstance } from "../utils/axiosInstance";
+import { addTrack, removeTrack } from "../services/playlistService";
 
 export default function TrackCard({
   id,
@@ -22,25 +22,17 @@ export default function TrackCard({
 }) {
   const [open, setOpen] = useState(false);
 
-  const addSongToMyPlaylist = async (playlistId) => {
-    try {
-      await axiosInstance.post(
-        `/playlists/${playlistId}/track/${track.track_id}`
-      );
+  const handleAddTrack = async (playlistId) => {
+    const response = await addTrack(playlistId, track.track_id);
+    if (response.success) {
       alert(`Successfully Add "${track.title}" to playlist`);
-      console.log("Add to my playlist", track.id);
-    } catch (error) {
-      return error.response.data;
     }
   };
 
-  const removeSongFromPlaylist = async () => {
-    try {
-      await axiosInstance.delete(`/playlists/${id}/track/${track.id}`);
+  const handleRemoveTrack = async () => {
+    const response = await removeTrack(id, track.id);
+    if (response.success) {
       onRemove();
-      console.log("Remove from my playlist", track.id);
-    } catch (error) {
-      return error.response.data;
     }
   };
   return (
@@ -98,7 +90,7 @@ export default function TrackCard({
                     gap={"10px"}
                     color={"gray.400"}
                     _hover={{ color: "white" }}
-                    onClick={() => removeSongFromPlaylist()}
+                    onClick={() => handleRemoveTrack()}
                   >
                     <SlTrash />
                     <Text>Remove from this playlist</Text>
@@ -113,7 +105,7 @@ export default function TrackCard({
                       gap={"10px"}
                       color={"gray.400"}
                       _hover={{ color: "white" }}
-                      onClick={() => addSongToMyPlaylist(playlist.id)}
+                      onClick={() => handleAddTrack(playlist.id)}
                     >
                       <FaPlus />
                       <Text>Add to {playlist.title}</Text>
