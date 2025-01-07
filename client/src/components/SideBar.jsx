@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Flex, Box, Image } from "@chakra-ui/react";
 import { Button } from "../components/ui/button";
 import { FaRegFolder } from "react-icons/fa6";
-import { fetchAllUserPlaylists } from "../services/playlistService";
+import { fetchUserPlaylists } from "../services/playlistService";
 
 export default function SideBar({ role }) {
   const navigate = useNavigate();
   const [playlist, setPlaylist] = useState([]);
 
   async function fetchPlaylistData() {
-    const response = await fetchAllUserPlaylists();
+    const response = await fetchUserPlaylists();
     setPlaylist(response);
   }
   useEffect(() => {

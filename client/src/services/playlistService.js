@@ -1,6 +1,6 @@
 import { axiosInstance } from "../utils/axiosInstance";
 
-export const fetchAllPlaylists = async () => {
+export const fetchAdminPlaylists = async () => {
   try {
     const response = await axiosInstance.get(`/playlists/admin/all`);
     return response.data.data;
@@ -9,7 +9,7 @@ export const fetchAllPlaylists = async () => {
   }
 };
 
-export const fetchAllUserPlaylists = async () => {
+export const fetchUserPlaylists = async () => {
   try {
     const response = await axiosInstance.get(`/playlists`);
     return response.data.data;

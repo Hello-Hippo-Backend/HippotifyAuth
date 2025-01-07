@@ -1,6 +1,6 @@
 import db from "../config/database.js";
 
-export const getAllPlaylists = async () => {
+export const getAdminPlaylists = async () => {
   const [playlists] = await db.promise().query(
     `SELECT p.id, p.cover, p.title, p.description, p.type, u.username as author
      FROM playlists p
@@ -9,7 +9,7 @@ export const getAllPlaylists = async () => {
   return playlists;
 };
 
-export const getAllUserPlaylists = async (userId) => {
+export const getUserPlaylists = async (userId) => {
   const [playlists] = await db.promise().query(
     `SELECT p.id, p.title, p.cover
      FROM playlists p
@@ -18,6 +18,16 @@ export const getAllUserPlaylists = async (userId) => {
     [userId]
   );
   return playlists;
+};
+
+export const getOwnedPlaylists = async (userId) => {
+  const [playlist] = await db.promise().query(
+    `SELECT id, title 
+     FROM playlists
+     WHERE user_id = ?`,
+    [userId]
+  );
+  return playlist;
 };
 
 export const getAdminPlaylistById = async (playlistId) => {
@@ -42,16 +52,6 @@ export const getUserPlaylistById = async (playlistId, userId) => {
     [playlistId, userId]
   );
   return playlist[0];
-};
-
-export const getPlaylistByUserId = async (userId) => {
-  const [playlist] = await db.promise().query(
-    `SELECT id, title 
-     FROM playlists
-     WHERE user_id = ?`,
-    [userId]
-  );
-  return playlist;
 };
 
 export const getPlaylistTracks = async (playlistId) => {

@@ -90,7 +90,10 @@ export default function TrackCard({
                     gap={"10px"}
                     color={"gray.400"}
                     _hover={{ color: "white" }}
-                    onClick={() => handleRemoveTrack()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveTrack();
+                    }}
                   >
                     <SlTrash />
                     <Text>Remove from this playlist</Text>
@@ -105,7 +108,10 @@ export default function TrackCard({
                       gap={"10px"}
                       color={"gray.400"}
                       _hover={{ color: "white" }}
-                      onClick={() => handleAddTrack(playlist.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddTrack(playlist.id);
+                      }}
                     >
                       <FaPlus />
                       <Text>Add to {playlist.title}</Text>

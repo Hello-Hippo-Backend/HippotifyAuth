@@ -2,14 +2,14 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PlayListCard from "../components/PlayListCard";
-import { fetchAllPlaylists } from "../services/playlistService";
+import { fetchAdminPlaylists } from "../services/playlistService";
 
 export default function Admin() {
   const [playlists, setPlaylists] = useState([]);
   const navigate = useNavigate();
 
   const fetchPlaylistsData = async () => {
-    const response = await fetchAllPlaylists();
+    const response = await fetchAdminPlaylists();
     setPlaylists(response);
     if (response.status === 403) {
       alert("You are not authorized to access this page.");

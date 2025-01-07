@@ -1,9 +1,9 @@
 import * as playlistModel from "../models/playlistModel.js";
 import { timeFormatHMS, timeFormat } from "../utils/timeFormatChange.js";
 
-export const getAllPlaylists = async (req, res) => {
+export const getAdminPlaylists = async (req, res) => {
   try {
-    const playlists = await playlistModel.getAllPlaylists();
+    const playlists = await playlistModel.getAdminPlaylists();
 
     return res.json({
       success: true,
@@ -20,10 +20,10 @@ export const getAllPlaylists = async (req, res) => {
   }
 };
 
-export const getAllUserPlaylist = async (req, res) => {
+export const getUserPlaylists = async (req, res) => {
   const userId = req.user.id;
   try {
-    const playlists = await playlistModel.getAllUserPlaylists(userId);
+    const playlists = await playlistModel.getUserPlaylists(userId);
 
     return res.json({
       success: true,
@@ -40,10 +40,10 @@ export const getAllUserPlaylist = async (req, res) => {
   }
 };
 
-export const getPlaylistByUserId = async (req, res) => {
+export const getOwnedPlaylists = async (req, res) => {
   const userId = req.user.id;
   try {
-    const playlists = await playlistModel.getPlaylistByUserId(userId);
+    const playlists = await playlistModel.getOwnedPlaylists(userId);
 
     return res.json({
       success: true,
