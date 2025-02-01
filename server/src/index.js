@@ -8,10 +8,12 @@ import authRoute from "./routes/authRoutes.js";
 import userRoute from "./routes/userRoutes.js";
 import playlistRoute from "./routes/playlistRoutes.js";
 import authenticateToken from "./middlewares/authenticateToken.js";
+import { logger } from "./middlewares/logger.js";
 
 const app = express();
 const port = 3000;
 
+app.use(logger);
 app.use(cookieParser());
 app.use(express.json());
 app.use(
